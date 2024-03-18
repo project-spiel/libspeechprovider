@@ -42,11 +42,11 @@ jobs:
         run: apt install -y git meson libgirepository1.0-dev dbus libdbus-glib-1-dev python3-dasbus python3-tap python3-gi libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good
       - name: Set up permissions
         run: chown ubuntu:ubuntu .
-      - name: Setup Spiel
+      - name: Setup libspeechprovider
         run: su ubuntu -c "meson setup build -Ddocs=false"
-      - name: Compile Spiel
+      - name: Compile libspeechprovider
         run: su ubuntu -c "meson compile -C build"
-      - name: Test Spiel
+      - name: Test libspeechprovider
         run: su ubuntu -c "meson test -C build"
       - uses: actions/upload-artifact@v1
         if: failure()

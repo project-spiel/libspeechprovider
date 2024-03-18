@@ -38,14 +38,14 @@ jobs:
         run: apt install -y git meson gi-docgen libgirepository1.0-dev libdbus-glib-1-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
       - name: Set up permissions
         run: chown ubuntu:ubuntu .
-      - name: Setup Spiel
+      - name: Setup libspeechprovider
         run: su ubuntu -c "meson setup build -Dtests=false"
-      - name: Compile Spiel
+      - name: Compile libspeechprovider
         run: su ubuntu -c "meson compile -C build"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: './build/doc/libspiel'
+          path: './build/doc/libspeechprovider'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
