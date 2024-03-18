@@ -1,9 +1,9 @@
 [library]
 version = "@version@"
 browse_url = "https://github.com/eeejay/libspiel"
-repository_url = "https://github.com/eeejay/libspiel.git"
-website_url = "https://github.com/eeejay/libspiel"
-docs_url = "https://eeejay.github.io/libspiel/"
+repository_url = "https://github.com/project-spiel/libspeechprovider.git"
+website_url = "https://github.com/project-spiel/libspeechprovider"
+docs_url = "https://project-spiel.github.io/libspeechprovider/"
 authors = "Eitan Isaacson"
 logo_url = "spiel-logo.svg"
 license = "LGPL-2.1"
