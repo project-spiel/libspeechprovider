@@ -1,6 +1,6 @@
 [library]
 version = "@version@"
-browse_url = "https://github.com/eeejay/libspiel"
+browse_url = "https://github.com/project-spiel/libspeechprovider"
 repository_url = "https://github.com/project-spiel/libspeechprovider.git"
 website_url = "https://github.com/project-spiel/libspeechprovider"
 docs_url = "https://project-spiel.github.io/libspeechprovider/"
