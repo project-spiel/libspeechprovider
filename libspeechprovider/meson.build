@@ -83,6 +83,8 @@ pkg.generate(
      requires: 'gobject-2.0'
 )
 
+meson.override_dependency('speech-provider-1.0', speech_provider_lib_dep)
+
 if get_option('introspection')
   gnome = import('gnome')
   speech_provider_gir = gnome.generate_gir(speech_provider_lib,
