@@ -37,9 +37,9 @@ python_module = import('python')
 python = python_module.find_installation(
   'python3', required : true)
 
-custom_target('speechprovider-doc',
+custom_target('libspeechprovider-doc',
   input: [ source_toml, speech_provider_gir[0] ],
-  output: 'speechprovider',
+  output: 'libspeechprovider',
   command: [
     gidocgen,
     'generate',
