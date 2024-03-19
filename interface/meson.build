@@ -1,4 +1,4 @@
 fs = import('fs')
 
-fs.copyfile('generate_enums.py')
-fs.copyfile('org.freedesktop.Speech.Provider.xml')
+generate_enums = fs.copyfile('generate_enums.py')
+iface_xml = fs.copyfile('org.freedesktop.Speech.Provider.xml')
