@@ -83,6 +83,8 @@ add_project_arguments(project_c_args, language: 'c')
 glib_version = '>= 2.76'
 gst_version = '>= 1.0'
 
+subdir('interface')
+
 subdir('libspeechprovider')
 
 if get_option('tests')
