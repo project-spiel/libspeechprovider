@@ -2,16 +2,9 @@ python_module = import('python')
 python = python_module.find_installation(
   'python3', required : true)
 gen_enums = files(join_paths(meson.project_source_root(), 'interface', 'generate_enums.py'))
-speech_provider_dbus_enums_h = custom_target(
+speech_provider_dbus_enums_ch = custom_target(
     input: join_paths(meson.project_source_root(), 'interface', 'org.freedesktop.Speech.Provider.xml'),
-    output: 'speech-provider-dbus-enums.h',
-    command: [python, gen_enums, 'speech_provider', '@INPUT@', '@OUTPUT@'],
-    install: true,
-    install_dir: join_paths(get_option('includedir'), 'speech-provider')
-)
-speech_provider_dbus_enums_c = custom_target(
-    input: join_paths(meson.project_source_root(), 'interface', 'org.freedesktop.Speech.Provider.xml'),
-    output: 'speech-provider-dbus-enums.c',
+    output: ['speech-provider-dbus-enums.c', 'speech-provider-dbus-enums.h'],
     command: [python, gen_enums, 'speech_provider', '@INPUT@', '@OUTPUT@'],
     install: true,
     install_dir: join_paths(get_option('includedir'), 'speech-provider')
@@ -22,7 +15,7 @@ speech_provider_dbus_enums_c = custom_target(
 speech_provider_sources = [
   'speech-provider-stream-reader.c',
   'speech-provider-stream-writer.c',
-  speech_provider_dbus_enums_c,
+  speech_provider_dbus_enums_ch[0],
 ]
 
 speech_provider_headers = [
@@ -49,8 +42,7 @@ speech_provider_version_h = configure_file(
 
 speech_provider_lib_generated = [
   speech_provider_version_h,
-  speech_provider_dbus_enums_h,
-  speech_provider_dbus_enums_c,
+  speech_provider_dbus_enums_ch,
 ]
 
 speech_provider_deps = [
@@ -88,7 +80,7 @@ meson.override_dependency('speech-provider-1.0', speech_provider_lib_dep)
 if get_option('introspection')
   gnome = import('gnome')
   speech_provider_gir = gnome.generate_gir(speech_provider_lib,
-              sources: speech_provider_headers + speech_provider_sources + speech_provider_dbus_enums_h,
+              sources: speech_provider_headers + speech_provider_sources + speech_provider_dbus_enums_ch[1],
               nsversion: api_version,
               namespace: 'SpeechProvider',
               header: 'speech-provider/speech-provider.h',

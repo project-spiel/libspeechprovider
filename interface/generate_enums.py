@@ -147,6 +147,7 @@ class DBusXMLEnumParser:
 
 
 if __name__ == "__main__":
-    prefix, infile, outfile = sys.argv[-3:]
-    data = open(infile)
-    parser = DBusXMLEnumParser(data.read(), prefix, infile, outfile)
+    prefix, infile, source, header = sys.argv[-4:]
+    xml_data = open(infile).read()
+    for outfile in [source, header]:
+        parser = DBusXMLEnumParser(xml_data, prefix, infile, outfile)
