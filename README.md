@@ -1,8 +1,8 @@
-<img alt="libspiel logo" align="right" src="https://raw.githubusercontent.com/eeejay/spiel/main/spiel-logo.svg">
+<img alt="libspiel logo" align="right" src="https://raw.githubusercontent.com/project-spiel/libspeechprovider/main/spiel-logo.svg">
 
 # Speech Provider Resources
 
-[![ Build & Test ](https://github.com/project-spiel/libspeechprovider/actions/workflows/ci.yml/badge.svg)](https://github.com/eeejay/spiel/actions/workflows/ci.yml) [![ Docs & Website ](https://github.com/project-spiel/libspeechprovider/actions/workflows/website.yml/badge.svg)](https://github.com/eeejay/spiel/actions/workflows/website.yml)
+[![ Build & Test ](https://github.com/project-spiel/libspeechprovider/actions/workflows/ci.yml/badge.svg)](https://github.com/project-spiel/libspeechprovider/actions/workflows/ci.yml) [![ Docs & Website ](https://github.com/project-spiel/libspeechprovider/actions/workflows/website.yml/badge.svg)](https://github.com/project-spiel/libspeechprovider/actions/workflows/website.yml)
 
 ## Overview
 

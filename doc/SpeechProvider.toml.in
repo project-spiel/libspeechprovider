@@ -33,7 +33,7 @@ show_index_summary = true
 show_class_hierarchy = true
 
 [source-location]
-base_url = "https://github.com/eeejay/libspiel/blob/main/"
+base_url = "https://github.com/project-spiel/libspeechprovider/blob/main/"
 
 [extra]
 urlmap_file = "urlmap.js"
