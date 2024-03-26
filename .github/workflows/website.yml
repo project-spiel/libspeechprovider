@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dbus-iface-spec
-          path: ./build/doc/generated-org.freedesktop.Speech.Provider.md'
+          path: './build/doc/generated-org.freedesktop.Speech.Provider.md'
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
