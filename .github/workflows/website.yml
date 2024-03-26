@@ -43,9 +43,8 @@ jobs:
       - name: Compile libspeechprovider
         run: su ubuntu -c "meson compile -C build"
       - name: Upload markdown artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v1
         with:
-          name: dbus-iface-spec
           path: './build/doc/generated-org.freedesktop.Speech.Provider.md'
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v1
