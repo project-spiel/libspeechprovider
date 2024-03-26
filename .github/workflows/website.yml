@@ -42,10 +42,6 @@ jobs:
         run: su ubuntu -c "meson setup build -Dtests=false"
       - name: Compile libspeechprovider
         run: su ubuntu -c "meson compile -C build"
-      - name: Upload markdown artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: './build/doc/generated-org.freedesktop.Speech.Provider.md'
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v1
         with:

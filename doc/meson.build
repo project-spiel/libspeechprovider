@@ -10,14 +10,6 @@ source_toml = configure_file(
 interface_src_dir = join_paths(meson.project_source_root(), 'interface')
 logo = join_paths(meson.project_source_root(), 'spiel-logo.svg')
 
-gdbus_codegen_cmd = find_program('gdbus-codegen')
-spiel_iface_docs = custom_target('dbus-docs',
-  output : 'generated-org.freedesktop.Speech.Provider.md',
-  input : join_paths(interface_src_dir, 'org.freedesktop.Speech.Provider.xml'),
-  command : [gdbus_codegen_cmd, '--generate-md', 'generated',
-             '--output-directory', meson.current_build_dir(),
-             join_paths(interface_src_dir, 'org.freedesktop.Speech.Provider.xml')])
-
 fs = import('fs')
 urlmap_doc = fs.copyfile('urlmap.js')
 logo_file = fs.copyfile(logo)
@@ -37,7 +29,7 @@ python_module = import('python')
 python = python_module.find_installation(
   'python3', required : true)
 
-custom_target('libspeechprovider-doc',
+docs = custom_target('libspeechprovider-doc',
   input: [ source_toml, speech_provider_gir[0] ],
   output: 'libspeechprovider',
   command: [
@@ -50,7 +42,17 @@ custom_target('libspeechprovider-doc',
     '@INPUT1@',
   ],
   build_by_default: true,
-  depends: [ spiel_iface_docs, urlmap_doc, logo_file ]
+  depends: [ urlmap_doc, logo_file ]
   # install: true,
   # install_dir: docs_dir,
 )
+
+gdbus_codegen_cmd = find_program('gdbus-codegen')
+spiel_iface_docs = custom_target('dbus-docs',
+  output : 'generated-org.freedesktop.Speech.Provider.md',
+  input : join_paths(interface_src_dir, 'org.freedesktop.Speech.Provider.xml'),
+  build_by_default: true,
+  depends: docs,
+  command : [gdbus_codegen_cmd, '--generate-md', 'generated',
+             '--output-directory', meson.current_build_dir() / 'libspeechprovider',
+             join_paths(interface_src_dir, 'org.freedesktop.Speech.Provider.xml')])

@@ -37,5 +37,5 @@ base_url = "https://github.com/project-spiel/libspeechprovider/blob/main/"
 
 [extra]
 urlmap_file = "urlmap.js"
-content_files = ["generated-org.freedesktop.Speech.Provider.md"]
+content_files = []
 content_images = ["spiel-logo.svg"]
