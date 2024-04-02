@@ -1,0 +1,1 @@
+fs.copyfile('lib.rs')

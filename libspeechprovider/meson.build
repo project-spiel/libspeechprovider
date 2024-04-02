@@ -88,6 +88,6 @@ if get_option('introspection')
       identifier_prefix: 'SpeechProvider',
                includes: [ 'GObject-2.0' ],
                 install: true,
-                export_packages: 'speech-provider',
+                export_packages: 'speech-provider-' + api_version,
   )
 endif

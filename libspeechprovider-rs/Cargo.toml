@@ -1,0 +1,16 @@
+[package]
+name = "libspeechprovider-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+glib = { version = "0.18.5" }
+
+[dependencies.ffi]
+package = "libspeechprovider-sys"
+path = "./libspeechprovider-sys"
+
+[dependencies.gobject]
+package = "gobject-sys"
+git = "https://github.com/gtk-rs/gtk-rs-core"
+

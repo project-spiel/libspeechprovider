@@ -1,6 +1,6 @@
 project('libspeechprovider', 'c',
           version: '1.0.1',
-    meson_version: '>= 0.64.0',
+    meson_version: '>= 1.3.0',
   default_options: [ 'warning_level=2', 'werror=false', 'c_std=gnu11', ],
 )
 
@@ -95,3 +95,6 @@ if get_option('docs') and get_option('introspection')
   subdir('doc')
 endif
 
+if get_option('rust-bindings') and get_option('introspection')
+  subdir('libspeechprovider-rs')
+endif

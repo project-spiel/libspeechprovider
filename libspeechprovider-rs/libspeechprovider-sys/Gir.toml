@@ -1,0 +1,12 @@
+[options]
+library = "SpeechProvider"
+version = "1.0"
+min_cfg_version = "1.0"
+target_path = "."
+work_mode = "sys"
+single_version_file = true
+
+external_libraries = ["GLib", "GObject"]
+
+[crate_name_overrides]
+"speech_provider" = "libspeechprovider"
