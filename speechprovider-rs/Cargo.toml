@@ -1,5 +1,5 @@
 [package]
-name = "libspeechprovider-rs"
+name = "speechprovider"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,8 +7,8 @@ edition = "2021"
 glib = { version = "0.18.5" }
 
 [dependencies.ffi]
-package = "libspeechprovider-sys"
-path = "./libspeechprovider-sys"
+package = "speechprovider-sys"
+path = "./sys"
 
 [dependencies.gobject]
 package = "gobject-sys"

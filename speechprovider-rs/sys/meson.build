@@ -1,4 +1,4 @@
-custom_target('libspeechprovider-sys',
+custom_target('speechprovider-sys',
   input: 'Gir.toml',
   output: '.',
   command: [

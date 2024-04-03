@@ -96,5 +96,5 @@ if get_option('docs') and get_option('introspection')
 endif
 
 if get_option('rust-bindings') and get_option('introspection')
-  subdir('libspeechprovider-rs')
+  subdir('speechprovider-rs')
 endif

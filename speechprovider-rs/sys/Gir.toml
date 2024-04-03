@@ -9,4 +9,4 @@ single_version_file = true
 external_libraries = ["GLib", "GObject"]
 
 [crate_name_overrides]
-"speech_provider" = "libspeechprovider"
+"speech_provider" = "speechprovider"

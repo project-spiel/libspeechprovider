@@ -10,14 +10,14 @@ foreach xdg_data_path : xdg_data_paths
   gir_dirs += ['-d', xdg_data_path / 'gir-1.0']
 endforeach
 
-subdir('libspeechprovider-sys')
+subdir('sys')
 
 subdir('src')
 
 fs.copyfile('Cargo.toml')
 gir_toml = fs.copyfile('Gir.toml')
 
-custom_target('libspeechprovider-rs',
+custom_target('speechprovider-rs',
   input: gir_toml,
   output: '.',
   command: [
