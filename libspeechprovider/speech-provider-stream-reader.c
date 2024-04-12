@@ -34,18 +34,14 @@
 struct _SpeechProviderStreamReader
 {
   GObject parent_instance;
-};
-
-typedef struct
-{
   gint fd;
   gboolean stream_header_received;
   SpeechProviderChunkType next_chunk_type;
-} SpeechProviderStreamReaderPrivate;
+};
 
-G_DEFINE_FINAL_TYPE_WITH_PRIVATE (SpeechProviderStreamReader,
-                                  speech_provider_stream_reader,
-                                  G_TYPE_OBJECT)
+G_DEFINE_FINAL_TYPE (SpeechProviderStreamReader,
+                     speech_provider_stream_reader,
+                     G_TYPE_OBJECT)
 
 enum
 {
@@ -89,13 +85,10 @@ speech_provider_stream_reader_new (gint fd)
 void
 speech_provider_stream_reader_close (SpeechProviderStreamReader *self)
 {
-  SpeechProviderStreamReaderPrivate *priv =
-      speech_provider_stream_reader_get_instance_private (self);
-
   g_return_if_fail (SPEECH_PROVIDER_IS_STREAM_READER (self));
 
-  close (priv->fd);
-  priv->fd = -1;
+  close (self->fd);
+  self->fd = -1;
 }
 
 /**
@@ -112,15 +105,13 @@ gboolean
 speech_provider_stream_reader_get_stream_header (
     SpeechProviderStreamReader *self)
 {
-  SpeechProviderStreamReaderPrivate *priv =
-      speech_provider_stream_reader_get_instance_private (self);
   SpeechProviderStreamHeader header;
 
   g_return_val_if_fail (SPEECH_PROVIDER_IS_STREAM_READER (self), FALSE);
-  g_assert (!priv->stream_header_received);
+  g_assert (!self->stream_header_received);
 
-  read (priv->fd, &header, sizeof (SpeechProviderStreamHeader));
-  priv->stream_header_received = TRUE;
+  read (self->fd, &header, sizeof (SpeechProviderStreamHeader));
+  self->stream_header_received = TRUE;
   return strncmp (header.version, SPEECH_PROVIDER_STREAM_PROTOCOL_VERSION, 4) ==
          0;
 }
@@ -128,13 +119,11 @@ speech_provider_stream_reader_get_stream_header (
 static SpeechProviderChunkType
 _get_next_chunk_type (SpeechProviderStreamReader *self)
 {
-  SpeechProviderStreamReaderPrivate *priv =
-      speech_provider_stream_reader_get_instance_private (self);
-  if (priv->next_chunk_type == SPEECH_PROVIDER_CHUNK_TYPE_NONE)
+  if (self->next_chunk_type == SPEECH_PROVIDER_CHUNK_TYPE_NONE)
     {
-      read (priv->fd, &priv->next_chunk_type, sizeof (SpeechProviderChunkType));
+      read (self->fd, &self->next_chunk_type, sizeof (SpeechProviderChunkType));
     }
-  return priv->next_chunk_type;
+  return self->next_chunk_type;
 }
 
 /**
@@ -155,8 +144,6 @@ speech_provider_stream_reader_get_audio (SpeechProviderStreamReader *self,
                                          guint8 **chunk,
                                          guint32 *chunk_size)
 {
-  SpeechProviderStreamReaderPrivate *priv =
-      speech_provider_stream_reader_get_instance_private (self);
   SpeechProviderChunkType chunk_type = SPEECH_PROVIDER_CHUNK_TYPE_NONE;
 
   g_return_val_if_fail (SPEECH_PROVIDER_IS_STREAM_READER (self), FALSE);
@@ -164,17 +151,17 @@ speech_provider_stream_reader_get_audio (SpeechProviderStreamReader *self,
   g_return_val_if_fail (chunk_size != NULL, FALSE);
 
   chunk_type = _get_next_chunk_type (self);
-  g_assert (priv->stream_header_received);
+  g_assert (self->stream_header_received);
   if (chunk_type != SPEECH_PROVIDER_CHUNK_TYPE_AUDIO)
     {
       *chunk_size = 0;
       return FALSE;
     }
 
-  read (priv->fd, chunk_size, sizeof (guint32));
+  read (self->fd, chunk_size, sizeof (guint32));
   *chunk = g_malloc (*chunk_size * sizeof (guint8));
-  read (priv->fd, *chunk, *chunk_size * sizeof (guint8));
-  priv->next_chunk_type = SPEECH_PROVIDER_CHUNK_TYPE_NONE;
+  read (self->fd, *chunk, *chunk_size * sizeof (guint8));
+  self->next_chunk_type = SPEECH_PROVIDER_CHUNK_TYPE_NONE;
   return TRUE;
 }
 
@@ -199,8 +186,6 @@ speech_provider_stream_reader_get_event (SpeechProviderStreamReader *self,
                                          guint32 *range_end,
                                          char **mark_name)
 {
-  SpeechProviderStreamReaderPrivate *priv =
-      speech_provider_stream_reader_get_instance_private (self);
   SpeechProviderChunkType chunk_type = _get_next_chunk_type (self);
   SpeechProviderEventData event_data;
 
@@ -209,24 +194,24 @@ speech_provider_stream_reader_get_event (SpeechProviderStreamReader *self,
   g_return_val_if_fail (range_start != NULL, FALSE);
   g_return_val_if_fail (range_end != NULL, FALSE);
   g_return_val_if_fail (mark_name != NULL && *mark_name == NULL, FALSE);
-  g_assert (priv->stream_header_received);
+  g_assert (self->stream_header_received);
 
   if (chunk_type != SPEECH_PROVIDER_CHUNK_TYPE_EVENT)
     {
       *event_type = SPEECH_PROVIDER_EVENT_TYPE_NONE;
       return FALSE;
     }
-  read (priv->fd, &event_data, sizeof (SpeechProviderEventData));
+  read (self->fd, &event_data, sizeof (SpeechProviderEventData));
   *event_type = event_data.event_type;
   *range_start = event_data.range_start;
   *range_end = event_data.range_end;
   if (event_data.mark_name_length)
     {
       char *name = g_malloc0 (event_data.mark_name_length * sizeof (char) + 1);
-      read (priv->fd, name, event_data.mark_name_length * sizeof (char));
+      read (self->fd, name, event_data.mark_name_length * sizeof (char));
       *mark_name = name;
     }
-  priv->next_chunk_type = SPEECH_PROVIDER_CHUNK_TYPE_NONE;
+  self->next_chunk_type = SPEECH_PROVIDER_CHUNK_TYPE_NONE;
   return TRUE;
 }
 
@@ -237,13 +222,11 @@ speech_provider_stream_reader_get_property (GObject *object,
                                             GParamSpec *pspec)
 {
   SpeechProviderStreamReader *self = SPEECH_PROVIDER_STREAM_READER (object);
-  SpeechProviderStreamReaderPrivate *priv =
-      speech_provider_stream_reader_get_instance_private (self);
 
   switch (prop_id)
     {
     case PROP_FD:
-      g_value_set_int (value, priv->fd);
+      g_value_set_int (value, self->fd);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -257,13 +240,11 @@ speech_provider_stream_reader_set_property (GObject *object,
                                             GParamSpec *pspec)
 {
   SpeechProviderStreamReader *self = SPEECH_PROVIDER_STREAM_READER (object);
-  SpeechProviderStreamReaderPrivate *priv =
-      speech_provider_stream_reader_get_instance_private (self);
 
   switch (prop_id)
     {
     case PROP_FD:
-      priv->fd = g_value_get_int (value);
+      self->fd = g_value_get_int (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -296,8 +277,6 @@ speech_provider_stream_reader_class_init (
 static void
 speech_provider_stream_reader_init (SpeechProviderStreamReader *self)
 {
-  SpeechProviderStreamReaderPrivate *priv =
-      speech_provider_stream_reader_get_instance_private (self);
-  priv->stream_header_received = FALSE;
-  priv->next_chunk_type = SPEECH_PROVIDER_CHUNK_TYPE_NONE;
+  self->stream_header_received = FALSE;
+  self->next_chunk_type = SPEECH_PROVIDER_CHUNK_TYPE_NONE;
 }

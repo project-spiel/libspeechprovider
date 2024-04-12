@@ -34,17 +34,13 @@
 struct _SpeechProviderStreamWriter
 {
   GObject parent_instance;
-};
-
-typedef struct
-{
   gint fd;
   gboolean stream_header_sent;
-} SpeechProviderStreamWriterPrivate;
+};
 
-G_DEFINE_FINAL_TYPE_WITH_PRIVATE (SpeechProviderStreamWriter,
-                                  speech_provider_stream_writer,
-                                  G_TYPE_OBJECT)
+G_DEFINE_FINAL_TYPE (SpeechProviderStreamWriter,
+                     speech_provider_stream_writer,
+                     G_TYPE_OBJECT)
 
 enum
 {
@@ -88,13 +84,10 @@ speech_provider_stream_writer_new (gint fd)
 void
 speech_provider_stream_writer_close (SpeechProviderStreamWriter *self)
 {
-  SpeechProviderStreamWriterPrivate *priv =
-      speech_provider_stream_writer_get_instance_private (self);
-
   g_return_if_fail (SPEECH_PROVIDER_IS_STREAM_WRITER (self));
 
-  close (priv->fd);
-  priv->fd = -1;
+  close (self->fd);
+  self->fd = -1;
 }
 
 /**
@@ -109,17 +102,15 @@ void
 speech_provider_stream_writer_send_stream_header (
     SpeechProviderStreamWriter *self)
 {
-  SpeechProviderStreamWriterPrivate *priv =
-      speech_provider_stream_writer_get_instance_private (self);
   SpeechProviderStreamHeader header = {
     .version = SPEECH_PROVIDER_STREAM_PROTOCOL_VERSION
   };
 
   g_return_if_fail (SPEECH_PROVIDER_IS_STREAM_WRITER (self));
 
-  g_assert (!priv->stream_header_sent);
-  write (priv->fd, &header, sizeof (SpeechProviderStreamHeader));
-  priv->stream_header_sent = TRUE;
+  g_assert (!self->stream_header_sent);
+  write (self->fd, &header, sizeof (SpeechProviderStreamHeader));
+  self->stream_header_sent = TRUE;
 }
 
 /**
@@ -137,17 +128,15 @@ speech_provider_stream_writer_send_audio (SpeechProviderStreamWriter *self,
                                           guint8 *chunk,
                                           guint32 chunk_size)
 {
-  SpeechProviderStreamWriterPrivate *priv =
-      speech_provider_stream_writer_get_instance_private (self);
   SpeechProviderChunkType chunk_type = SPEECH_PROVIDER_CHUNK_TYPE_AUDIO;
 
   g_return_if_fail (SPEECH_PROVIDER_IS_STREAM_WRITER (self));
   g_return_if_fail (chunk != NULL);
-  g_assert (priv->stream_header_sent);
+  g_assert (self->stream_header_sent);
 
-  write (priv->fd, &chunk_type, sizeof (SpeechProviderChunkType));
-  write (priv->fd, &chunk_size, sizeof (guint32));
-  write (priv->fd, chunk, chunk_size);
+  write (self->fd, &chunk_type, sizeof (SpeechProviderChunkType));
+  write (self->fd, &chunk_size, sizeof (guint32));
+  write (self->fd, chunk, chunk_size);
 }
 
 /**
@@ -165,8 +154,6 @@ speech_provider_stream_writer_send_event (SpeechProviderStreamWriter *self,
                                           guint32 range_end,
                                           const char *mark_name)
 {
-  SpeechProviderStreamWriterPrivate *priv =
-      speech_provider_stream_writer_get_instance_private (self);
   SpeechProviderChunkType chunk_type = SPEECH_PROVIDER_CHUNK_TYPE_EVENT;
   SpeechProviderEventData event_data = { .event_type = event_type,
                                          .range_start = range_start,
@@ -174,14 +161,14 @@ speech_provider_stream_writer_send_event (SpeechProviderStreamWriter *self,
 
   g_return_if_fail (SPEECH_PROVIDER_IS_STREAM_WRITER (self));
   g_return_if_fail (mark_name != NULL);
-  g_assert (priv->stream_header_sent);
+  g_assert (self->stream_header_sent);
 
   event_data.mark_name_length = g_utf8_strlen (mark_name, -1);
-  write (priv->fd, &chunk_type, sizeof (SpeechProviderChunkType));
-  write (priv->fd, &event_data, sizeof (SpeechProviderEventData));
+  write (self->fd, &chunk_type, sizeof (SpeechProviderChunkType));
+  write (self->fd, &event_data, sizeof (SpeechProviderEventData));
   if (event_data.mark_name_length)
     {
-      write (priv->fd, mark_name, event_data.mark_name_length);
+      write (self->fd, mark_name, event_data.mark_name_length);
     }
 }
 
@@ -189,10 +176,8 @@ static void
 speech_provider_stream_writer_finalize (GObject *object)
 {
   SpeechProviderStreamWriter *self = (SpeechProviderStreamWriter *) object;
-  SpeechProviderStreamWriterPrivate *priv =
-      speech_provider_stream_writer_get_instance_private (self);
 
-  close (priv->fd);
+  close (self->fd);
   G_OBJECT_CLASS (speech_provider_stream_writer_parent_class)
       ->finalize (object);
 }
@@ -204,13 +189,11 @@ speech_provider_stream_writer_get_property (GObject *object,
                                             GParamSpec *pspec)
 {
   SpeechProviderStreamWriter *self = SPEECH_PROVIDER_STREAM_WRITER (object);
-  SpeechProviderStreamWriterPrivate *priv =
-      speech_provider_stream_writer_get_instance_private (self);
 
   switch (prop_id)
     {
     case PROP_FD:
-      g_value_set_int (value, priv->fd);
+      g_value_set_int (value, self->fd);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -224,13 +207,11 @@ speech_provider_stream_writer_set_property (GObject *object,
                                             GParamSpec *pspec)
 {
   SpeechProviderStreamWriter *self = SPEECH_PROVIDER_STREAM_WRITER (object);
-  SpeechProviderStreamWriterPrivate *priv =
-      speech_provider_stream_writer_get_instance_private (self);
 
   switch (prop_id)
     {
     case PROP_FD:
-      priv->fd = g_value_get_int (value);
+      self->fd = g_value_get_int (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -264,7 +245,5 @@ speech_provider_stream_writer_class_init (
 static void
 speech_provider_stream_writer_init (SpeechProviderStreamWriter *self)
 {
-  SpeechProviderStreamWriterPrivate *priv =
-      speech_provider_stream_writer_get_instance_private (self);
-  priv->stream_header_sent = FALSE;
+  self->stream_header_sent = FALSE;
 }
