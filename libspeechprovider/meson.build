@@ -3,7 +3,7 @@ python = python_module.find_installation(
   'python3', required : true)
 gen_enums = files(join_paths(meson.project_source_root(), 'interface', 'generate_enums.py'))
 speech_provider_dbus_enums_ch = custom_target(
-    input: join_paths(meson.project_source_root(), 'interface', 'org.freedesktop.Speech.Provider.xml'),
+    input: iface_xml,
     output: ['speech-provider-dbus-enums.c', 'speech-provider-dbus-enums.h'],
     command: [python, gen_enums, 'speech_provider', '@INPUT@', '@OUTPUT@'],
     install: true,
@@ -72,7 +72,10 @@ pkg.generate(
      filebase: 'speech-provider-' + api_version,
       version: meson.project_version(),
       subdirs: 'speech-provider',
-     requires: 'gobject-2.0'
+     requires: 'gobject-2.0',
+     variables: {
+      'iface_xml': get_option('prefix') / get_option('datadir') / 'speech-provider' / 'org.freedesktop.Speech.Provider.xml',
+    }
 )
 
 meson.override_dependency('speech-provider-1.0', speech_provider_lib_dep)
