@@ -75,6 +75,9 @@ pkg.generate(
      requires: 'gobject-2.0',
      variables: {
       'iface_xml': get_option('prefix') / get_option('datadir') / 'speech-provider' / 'org.freedesktop.Speech.Provider.xml',
+    },
+    uninstalled_variables: {
+      'iface_xml': '${prefix}' / 'interface' /  'org.freedesktop.Speech.Provider.xml',
     }
 )
 
