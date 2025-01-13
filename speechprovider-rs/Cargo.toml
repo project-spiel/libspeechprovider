@@ -4,11 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-glib = { version = "0.18.5" }
-
-[dependencies.ffi]
-package = "speechprovider-sys"
-path = "./sys"
+glib = { version = "0.20.7" }
+speechprovider-sys = { path = "./sys" }
 
 [dependencies.gobject]
 package = "gobject-sys"

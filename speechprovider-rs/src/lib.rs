@@ -10,5 +10,6 @@ macro_rules! assert_initialized_main_thread {
   () => {};
 }
 
+pub use speechprovider_sys as ffi;
 pub use auto::*;
 mod auto;
