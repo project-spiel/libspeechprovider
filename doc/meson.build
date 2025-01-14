@@ -43,9 +43,9 @@ docs = custom_target('libspeechprovider-doc',
     '@INPUT1@',
   ],
   build_by_default: true,
-  depends: [ urlmap_doc, logo_file ]
-  # install: true,
-  # install_dir: docs_dir,
+  depends: [ urlmap_doc, logo_file ],
+  install: true,
+  install_dir: get_option('datadir') / 'doc',
 )
 
 gdbus_codegen_cmd = find_program('gdbus-codegen')
