@@ -53,7 +53,10 @@
       <li>A list of languages the voice support represented as BCP 47 tags</li>
     </ul>
   -->
-    <property name="Voices" type="a(ssstas)" access="read"/>
+    <property name="Voices" type="a(ssstas)" access="read">
+      <annotation name="org.qtproject.QtDBus.QtTypeName"
+                  value="QList&lt;std::tuple&lt;QString,QString,QString,uint64_t,QStringList&gt;&gt;"/>
+    </property>
 
     <!--
     Name:
