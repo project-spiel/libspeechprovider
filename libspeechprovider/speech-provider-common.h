@@ -25,7 +25,7 @@ G_BEGIN_DECLS
 
 typedef struct __attribute__ ((__packed__))
 {
-  char version[4];
+  char version[4] __attribute__((__nonstring__));
 } SpeechProviderStreamHeader;
 
 typedef enum __attribute__ ((__packed__))
