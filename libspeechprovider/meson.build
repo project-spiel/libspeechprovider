@@ -61,6 +61,10 @@ speech_provider_lib_dep = declare_dependency(
   dependencies: speech_provider_deps,
   link_with: speech_provider_lib,
   include_directories: include_directories('.'),
+  variables: {
+    'iface_xml': meson.project_source_root() / 'interface' /  'org.freedesktop.Speech.Provider.xml',
+  }
+
 )
 
 install_headers(speech_provider_headers, subdir: 'speech-provider')
@@ -78,7 +82,7 @@ pkg.generate(
       'iface_xml': get_option('prefix') / get_option('datadir') / 'speech-provider' / 'org.freedesktop.Speech.Provider.xml',
     },
     uninstalled_variables: {
-      'iface_xml': '${prefix}' / 'interface' /  'org.freedesktop.Speech.Provider.xml',
+      'iface_xml': meson.project_source_root() / 'interface' /  'org.freedesktop.Speech.Provider.xml',
     }
 )
 
