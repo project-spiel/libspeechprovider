@@ -105,13 +105,14 @@ gboolean
 speech_provider_stream_reader_get_stream_header (
     SpeechProviderStreamReader *self)
 {
-  SpeechProviderStreamHeader header;
+  SpeechProviderStreamHeader header = {0};
 
   g_return_val_if_fail (SPEECH_PROVIDER_IS_STREAM_READER (self), FALSE);
   g_assert (!self->stream_header_received);
 
   read (self->fd, &header, sizeof (SpeechProviderStreamHeader));
   self->stream_header_received = TRUE;
+
   return strncmp (header.version, SPEECH_PROVIDER_STREAM_PROTOCOL_VERSION, 4) ==
          0;
 }
