@@ -49,10 +49,11 @@ speech_provider_deps = [
   dependency('gobject-2.0', version: glib_version),
 ]
 
-speech_provider_lib = shared_library('speech-provider-' + api_version,
+speech_provider_lib = library('speech-provider',
   [speech_provider_sources, speech_provider_lib_generated],
   dependencies: speech_provider_deps,
   version: meson.project_version(),
+  soversion: api_version,
   install: true,
 )
 
@@ -63,6 +64,7 @@ speech_provider_lib_dep = declare_dependency(
   include_directories: include_directories('.'),
   variables: {
     'iface_xml': meson.project_source_root() / 'interface' /  'org.freedesktop.Speech.Provider.xml',
+    'libdir': meson.project_build_root() / 'libspeechprovider',
   }
 
 )
