@@ -105,7 +105,7 @@ gboolean
 speech_provider_stream_reader_get_stream_header (
     SpeechProviderStreamReader *self)
 {
-  SpeechProviderStreamHeader header = {0};
+  SpeechProviderStreamHeader header = { 0 };
 
   g_return_val_if_fail (SPEECH_PROVIDER_IS_STREAM_READER (self), FALSE);
   g_assert (!self->stream_header_received);
