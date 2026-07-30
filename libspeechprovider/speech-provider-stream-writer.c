@@ -163,7 +163,7 @@ speech_provider_stream_writer_send_event (SpeechProviderStreamWriter *self,
   g_return_if_fail (mark_name != NULL);
   g_assert (self->stream_header_sent);
 
-  event_data.mark_name_length = g_utf8_strlen (mark_name, -1);
+  event_data.mark_name_length = strlen (mark_name);
   write (self->fd, &chunk_type, sizeof (SpeechProviderChunkType));
   write (self->fd, &event_data, sizeof (SpeechProviderEventData));
   if (event_data.mark_name_length)
